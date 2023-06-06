@@ -26,21 +26,21 @@ const RegistrationForm = () => {
     setStatus(e.target.value);
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit =  async (e) => {
     e.preventDefault();
 
     // Perform registration logic here (e.g., send API request)
+    
     const user = {
-      id: 2442826,
       name,
       email,
       gender,
       status,
     };
     // Call the registerUser function from the service file
-    await registerUser(user);
+    const result = await registerUser(user);
 
-
+    console.log('User registered successfully:', result);
 
     // Redirect to '/x' after successful registration
     navigate('/');

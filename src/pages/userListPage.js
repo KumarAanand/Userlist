@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import UserTable from "../component/usertable";
 import "../styles/common-style.css";
 import { Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {  useNavigate } from "react-router-dom";
+import { deleteUser,getUserList } from '../service/api-service';
 
 const UserListPage = () => {
   const [users, setUsers] = useState([]);
@@ -14,12 +14,32 @@ const UserListPage = () => {
     navigate('/RegistrationForm')
   };
 
+  const onHandleDelete = async (e)=>{
+    console.log('click to delete user entry',e)
+    try {
+      // Pass the user ID and token as arguments to the deleteUser function
+      await deleteUser(e);
+      getUserList().then((response) => {
+        setUsers(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      // Refresh the user list or perform any additional actions
+    } catch (error) {
+      // Handle the error
+      console.error('Error deleting user:', error.message);
+    }
+  }
+
+  const onHandleEdit =()=>{
+    
+  }
+
   
   useEffect(() => {
-    axios
-      .get("https://gorest.co.in/public/v2/users")
-      .then((response) => {
-        setUsers(response.data);
+     getUserList().then((response) => {
+        setUsers(response);
       })
       .catch((error) => {
         console.error(error);
@@ -34,7 +54,7 @@ const UserListPage = () => {
             Create User         
            </Button>           
       </div>
-      <UserTable users={users} />
+      <UserTable users={users} onEdit={onHandleEdit} onDelete={onHandleDelete}/>
     </div>
   );
 };
